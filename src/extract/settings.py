@@ -1,4 +1,4 @@
-# Scrapy settings for collect project
+# Scrapy settings for extract project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -7,17 +7,17 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = "collect"
+BOT_NAME = "extract"
 
-SPIDER_MODULES = ["collect.spiders"]
-NEWSPIDER_MODULE = "collect.spiders"
+SPIDER_MODULES = ["extract.spiders"]
+NEWSPIDER_MODULE = "extract.spiders"
 
-
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "collect (+http://www.yourdomain.com)"
+#USER_AGENT = "extract (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -45,13 +45,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    "collect.middlewares.CollectSpiderMiddleware": 543,
+#    "extract.middlewares.extractSpiderMiddleware": 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    "collect.middlewares.CollectDownloaderMiddleware": 543,
+#    "extract.middlewares.extractDownloaderMiddleware": 543,
 #}
 
 # Enable or disable extensions
@@ -63,7 +63,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    "collect.pipelines.CollectPipeline": 300,
+#    "extract.pipelines.extractPipeline": 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
