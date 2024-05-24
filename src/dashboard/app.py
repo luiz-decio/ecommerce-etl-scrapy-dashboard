@@ -42,7 +42,7 @@ else:
 
     # Defining the columns structure for the main KPIs
     st.subheader('Main KPIs')
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
 
     # KPI 1: Items total count
     total_itens = df.shape[0]
@@ -54,7 +54,11 @@ else:
 
     # KPI 3: Average new price (after discount)
     avg_new_price = df['new_price'].mean()
-    col3.metric(label='Average Price After Discount (BRL)', value=f'{avg_new_price:.2f}')
+    col3.metric(label='Average Price After Discount (BRL)', value=f'R$ {avg_new_price:.2f}')
+
+    # KPI 4: Average price before discount
+    avg_old_price = df['old_price'].mean()
+    col4.metric(label='Average Price Before Discount (BRL)', value=f'R$ {avg_old_price:.2f}')
 
     # Defining the subtitle and the columns structure for the  charts
     st.subheader('Top 20 brands with most products')
