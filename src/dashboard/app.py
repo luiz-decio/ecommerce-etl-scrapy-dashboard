@@ -21,7 +21,7 @@ else:
 
     # Dashboard page config
     st.set_page_config(
-        page_title='Ecommerce Price Analysis',
+        page_title='E-commerce Price Analysis',
         page_icon='📈',
         layout='wide',
         initial_sidebar_state='collapsed'
@@ -32,11 +32,16 @@ else:
         selected_brand = st.selectbox('Select a brand', brands_list, index=len(brands_list)-1)
         df_selected_brand = df[df.brand == selected_brand]
 
-    # Define the app title and subtitle
-    st.title("Ecommerce Price Analysis - Men's running shoes")
-    st.subheader('Main KPIs')
+    # Define the page title and description of the dashboard
+    st.title("E-commerce Price Analysis - Men's running shoes")
+    st.text('''
+            This dashboard is based on the products information of men's running shoes available on one of the largest Brazilian e-commerce websites.
+
+            The goal is to understand the most relevant brands and how the price of the products relates to the clients reviews and then answer weather good products necessarialy has the highest prices.  
+            ''')
 
     # Defining the columns structure for the main KPIs
+    st.subheader('Main KPIs')
     col1, col2, col3 = st.columns(3)
 
     # KPI 1: Items total count
@@ -52,28 +57,59 @@ else:
     col3.metric(label='Average Price After Discount (BRL)', value=f'{avg_new_price:.2f}')
 
     # Defining the subtitle and the columns structure for the  charts
-    st.subheader('Product count by brand')
-    col1, col2 = st.columns([4, 2], gap='medium')
+    st.subheader('Top 20 brands with most products')
+    col1, col2 = st.columns([3, 2], gap='medium')
 
     # Top 20 brands that appear the most
-    top_20_brands = df['brand'].value_counts().head(20)
-    col1.bar_chart(
-        top_20_brands,
-        color='#FD5B4F'
+    top_20_brands = df.groupby('brand').aggregate(
+        {
+            'brand':'count',
+            'reviews_amount':'sum',
+            'new_price':['mean','max', 'min']
+         }
+         ).reset_index()
+    
+    # Flatten the multi-level column index
+    top_20_brands.columns = ['_'.join(col).strip() for col in top_20_brands.columns.values]
+    # Rename 'brand_count' to 'count'
+    top_20_brands.rename(columns={'brand_': 'Brand',
+                                  'brand_count': 'Product Qty',
+                                  'reviews_amount_sum': "Total Product Reviews",
+                                  'new_price_mean':'Average Price',
+                                  'new_price_max':'Highest Price',
+                                  'new_price_min':'Lowest Price'
+                                  }, inplace=True)
+
+    # Sorting by the amount of products and filtering the top 20
+    top_20_brands.sort_values(by='Product Qty', ascending=False, inplace=True)
+    top_20_brands = top_20_brands.head(20)
+
+    # Create a bar chart with Altair
+    top_20_brands_bar_chart = alt.Chart(top_20_brands).mark_bar(color='#FD5B4F').encode(
+        x=alt.X('Brand:N', sort='-y'),
+        y='Product Qty:Q'
     )
-    col2.write(top_20_brands)
 
-    # Average price per brand
+    # Display bar chart in the first column
+    with col1:
+        st.altair_chart(top_20_brands_bar_chart, use_container_width=True)
+
+    # Display dataframe in the second column
+    with col2:
+        st.dataframe(top_20_brands, hide_index=True)
+
+    # Average price versus average reviews rating per brand
     st.subheader('Average reviews rating versus average price per brand')
-    #col1 = st.columns([1,5],gap='medium')
-
-    #avg_review_rating = df.groupby('brand')['reviews_rating_number'] \
-    #                      .mean().sort_values(ascending=False)
-    #col1.write(avg_review_rating)
-
-    #avg_price_per_brand = df.groupby('brand')['new_price'].mean().sort_values(ascending=False)
     avg_price_ratings_brand = df.groupby('brand').aggregate({'new_price':'mean', 'reviews_rating_number':'mean'})
+
+    # Rename the columns
+    avg_price_ratings_brand.rename(columns={'brand':'Brand',
+                                            'new_price':'Average Product Price',
+                                            'reviews_rating_number':'Average Review Rating'},
+                                            inplace=True)
+    
+    # Creating the scatter chart
     st.scatter_chart(avg_price_ratings_brand, 
-                    size='reviews_rating_number', 
-                    color=['#FD5B4F','#FD5B4F']                 
+                    size='Average Review Rating', 
+                    color=['#FD5B4F','#FD5B4F']
                     )
