@@ -57,13 +57,16 @@ col1.bar_chart(
 col2.write(top_20_brands)
 
 # Average price per brand
-st.subheader('Average reviews rating and price per brand')
-col1, col2 = st.columns([1,5],gap='medium')
+st.subheader('Average reviews rating versus average price per brand')
+#col1 = st.columns([1,5],gap='medium')
 
-avg_review_rating = df.groupby('brand')['reviews_rating_number'] \
-                      .mean().sort_values(ascending=False)
-col1.write(avg_review_rating)
+#avg_review_rating = df.groupby('brand')['reviews_rating_number'] \
+#                      .mean().sort_values(ascending=False)
+#col1.write(avg_review_rating)
 
-avg_price_per_brand = df.groupby('brand')['new_price'].mean().sort_values(ascending=False)
-col2.scatter_chart(avg_price_per_brand, color='#FD5B4F')
-
+#avg_price_per_brand = df.groupby('brand')['new_price'].mean().sort_values(ascending=False)
+avg_price_ratings_brand = df.groupby('brand').aggregate({'new_price':'mean', 'reviews_rating_number':'mean'})
+st.scatter_chart(avg_price_ratings_brand, 
+                 size='reviews_rating_number', 
+                 color=['#FD5B4F','#FD5B4F']                 
+                 )

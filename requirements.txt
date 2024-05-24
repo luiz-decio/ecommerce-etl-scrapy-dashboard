@@ -35,7 +35,6 @@ service-identity==24.1.0
 six==1.16.0
 tldextract==5.1.2
 Twisted==24.3.0
-twisted-iocpsupport==1.0.4
 typing_extensions==4.11.0
 tzdata==2024.1
 urllib3==2.2.1
