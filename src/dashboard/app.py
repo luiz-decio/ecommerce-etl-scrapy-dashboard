@@ -104,8 +104,11 @@ else:
 
     # Average price versus average reviews rating per brand
     st.subheader('Average reviews rating versus average price per brand')
-    avg_price_ratings_brand = df.groupby('brand').aggregate({'new_price':'mean', 'reviews_rating_number':'mean'})
-
+    #avg_price_ratings_brand = df.groupby('brand').aggregate({'new_price':'mean', 'reviews_rating_number':'mean'})
+    avg_price_ratings_brand = df.groupby('brand').aggregate(
+        new_price = ('new_price','mean'),
+        reviews_rating_number = ('reviews_rating_number', lambda x: x[x != 0].mean())
+    )
     # Rename the columns
     avg_price_ratings_brand.rename(columns={'brand':'Brand',
                                             'new_price':'Average Product Price',
